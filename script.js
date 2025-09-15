@@ -3,25 +3,74 @@
     ㅤ__________________________________________________________________________________________________________
     <h1 class="text-2xl font-bold mb-3">Annex Apportionment: Luzhek Method Simulator</h1>
     <p class="mb-4 text-sm text-gray-700">
-      <strong>Luzhek–Annex Apportionment Method</strong> — A seat apportionment simulator for non-voting seats of a legislative chamber.
+      <strong>nnex Apportionment using Luzhek Method</strong> — A seat apportionment simulator for non-voting seats of a legislative chamber.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      For use in nations with a Split-Chamber System.
+      For use in nations with a Split-Chamber System. Wherein a chamber is split into voting (Deliberative) and non-voting (Annex) seats, and wherein said Annex seats are apportioned [quasi-]proportionally to avoid raising the seat cieling of the main chamber. (Also to compleletely avoid proportionality in the main chamber)
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      <strong>Instructions:</strong> All fields must be non-negative. (Total voter turnout is automatically calculated from party votes).
+      <strong><span style="text-decoration: underline;">Fun Fact</span></strong>: This system originated, and is only present, in <strong>Tschabelia</strong> | <strong><a href="https://www.nationstates.net/nation=tschabelia" target="_blank" class="text-blue-600 hover:underline">Tschabelia on NationStates.net</a></strong>.
     </p>
+    <p class="mb-4 text-sm text-gray-700">
+      <strong>Instructions:</strong> All fields must be non-negative. Percentages must be in decimal form (e.g. 0.15 = 15%).
+    </p>
+
+
+
     <p class="mb-4 text-sm text-gray-700">
       • In <span style="text-decoration: underline;">Parameters</span>:
     </p>
     <p class="mb-4 text-sm text-gray-700">
       ㅤ◦ Enter the total seat count of the voting section of your chamber.
     </p>
-    <p class="mb-4 text-sm red-text" style="color: #ff0000;">
-      <strong>WARNING: DO NOT edit code whilst using simulator if you do not wish to lose your custom inputs. Editing will reset it back to sample data.</strong>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Enter a percentage to set the maximum number of seats in the annex by using total Deliberative seats as a base to multiply by. Fractions will always be <span style="text-decoration: underline;">rounded down</span>.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      Sample data is from Tschabelia's 2020 Chamber of Deputies Election | <strong><a href="https://www.nationstates.net/nation=tschabelia" target="_blank" class="text-blue-600 hover:underline">Tschabelia on NationStates.net</a></strong>.
+      ㅤ◦ Enter the <span style="text-decoration: underline;">minimum</span> vote share allowed for eligibilty in the Annex.
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Enter the vote share [percentage] threshold, above which parties are no longer considered "small" and not eligible for a "boost".
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Enter the amount by which you wish to boost small parties by. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
+    </p>
+
+
+
+    <p class="mb-4 text-sm text-gray-700">
+      • In <span style="text-decoration: underline;">Global</span>:
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ The total voter turnout box offers no output. It's just a display.
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Choose your preferred rounding mode when caluclating Annex seat amounts. 
+    </p>
+
+
+
+    <p class="mb-4 text-sm text-gray-700">
+      • In <span style="text-decoration: underline;">Parties</span>:
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Remove sample party data.
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Customize to your preferences.
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Check/Uncheck boxes to decide if that party gets representation in the Annex.
+    </p>
+
+
+
+    <p class="mb-4 text-sm text-gray-700">
+      • When you're finished click <strong>Run</strong>.
+    </p>
+
+    <p class="mb-4 text-sm text-gray-700">
+      Sample data is from Tschabelia's 2020 Chamber of Deputies Election
     </p>
 
     <!-- Error Message -->
@@ -33,19 +82,19 @@
       <!-- Parameters Panel -->
       <div class="p-3 border rounded">
         <h2 class="font-semibold mb-2">Parameters</h2>
-        <label class="block text-sm">Deliberative seats (S)
+        <label class="block text-sm">Deliberative seats
           <input v-model.number="params.S" type="number" min="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">Annex cap (%)
+        <label class="block text-sm mt-2">ㅤAnnex cap (%)
           <input v-model.number="params.alpha" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">Annex threshold (%)
+        <label class="block text-sm mt-2">ㅤAnnex threshold (%)
           <input v-model.number="params.t_annex" type="number" step="0.001" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">Small-party cutoff (%)
+        <label class="block text-sm mt-2">ㅤSmall-party cutoff (%)
           <input v-model.number="params.small_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">Small party boost (%)
+        <label class="block text-sm mt-2">ㅤSmall party boost (%)
           <input v-model.number="params.b" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
       </div>
@@ -56,7 +105,7 @@
         <label class="block text-sm">Total voter turnout (auto-calculated from table)
           <input :value="totalVotes" type="number" readonly class="w-full mt-1 p-1 border rounded bg-gray-100" />
         </label>
-        <label class="block text-sm mt-2">Rounding mode
+        <label class="block text-sm mt-2">ㅤRounding mode
           <select v-model="global.roundMode" class="w-full mt-1 p-1 border rounded">
             <option value="nearest">Nearest (.5 to even)</option>
             <option value="ceil">Ceil</option>
@@ -74,7 +123,7 @@
 
     <!-- Parties Table -->
     <div class="mb-4">
-      <h2 class="font-semibold mb-2">Parties (editable)</h2>
+      <h2 class="font-semibold mb-2">Parties</h2>
       <table class="w-full text-sm border-collapse">
         <thead>
           <tr class="text-left border-b">
@@ -122,9 +171,9 @@
               <th>%</th>
               <th>Seats</th>
               <th>Entitlement</th>
-              <th>baseline</th>
-              <th>boost</th>
-              <th>aug</th>
+              <th> Baseline Difference</th>
+              <th>Boost</th>
+              <th>Augment.</th>
               <th>Annex Seats</th>
               <th>Total</th>
             </tr>
