@@ -302,9 +302,9 @@ const App = {
         <thead>
           <tr class="text-left border-b">
             <th>Name</th>
-            <th>Votes (or est share)</th>
-            <th>District seats d_i</th>
-            <th>Eligible for Annex</th>
+            <th>Votes (raw)</th>
+            <th>Deliberative Seats</th>
+            <th>Eligible for Annex?</th>
             <th></th>
           </tr>
         </thead>
