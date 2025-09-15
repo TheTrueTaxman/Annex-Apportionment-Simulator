@@ -218,7 +218,7 @@ const App = {
       ㅤ◦ The total voter turnout box offers no output. It's just a display.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ Choose your preferred rounding mode when caluclating Annex seat amounts. 
+      ㅤ◦ Choose your preferred rounding mode when caluclating Annex seat amounts. (e.g Nearest rounds from .5, Ceil rounds up no matter the decimal, Floor rounds down no matter the decimal)
     </p>
 
 
