@@ -174,9 +174,9 @@ const App = {
   template: `
   <div class="p-4 max-w-5xl mx-auto font-sans">
     ㅤ__________________________________________________________________________________________________________
-    <h1 class="text-2xl font-bold mb-3">Annex Apportionment: Luzhek Method Simulator</h1>
+    <h1 class="text-2xl font-bold mb-3">Annex Apportionment Simulator</h1>
     <p class="mb-4 text-sm text-gray-700">
-      <strong>nnex Apportionment using Luzhek Method</strong> — A seat apportionment simulator for non-voting seats of a legislative chamber.
+      <strong>Annex Apportionment using Luzhek Method</strong> — A seat apportionment simulator for non-voting seats of a legislative chamber.
     </p>
     <p class="mb-4 text-sm text-gray-700">
       For use in nations with a Split-Chamber System. Wherein a chamber is split into voting (Deliberative) and non-voting (Annex) seats, and wherein said Annex seats are apportioned [quasi-]proportionally to avoid raising the seat cieling of the main chamber. (Also to compleletely avoid proportionality in the main chamber)
@@ -194,19 +194,19 @@ const App = {
       • In <span style="text-decoration: underline;">Parameters</span>:
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ Enter the total seat count of the voting section of your chamber.
+      ㅤ◦ 1. Enter the total seat count of the voting section of your chamber.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ Enter a percentage to set the maximum number of seats in the annex by using total Deliberative seats as a base to multiply by. Fractions will always be <span style="text-decoration: underline;">rounded down</span>.
+      ㅤ◦ 2. Enter a percentage to set the maximum number of seats in the annex by using total Deliberative seats as a base to multiply by. Fractions will always be <span style="text-decoration: underline;">rounded down</span>.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ Enter the <span style="text-decoration: underline;">minimum</span> vote share allowed for eligibilty in the Annex.
+      ㅤ◦ 3. Enter the <span style="text-decoration: underline;">minimum</span> vote share allowed for eligibilty in the Annex.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ Enter the vote share [percentage] threshold, above which parties are no longer considered "small" and not eligible for a "boost".
+      ㅤ◦ 4. Enter the vote share [percentage] threshold, above which parties are no longer considered "small" and not eligible for a "boost".
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ Enter the amount by which you wish to boost small parties by. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
+      ㅤ◦ 5. Enter the amount by which you wish to boost small parties by. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
     </p>
 
 
@@ -241,7 +241,8 @@ const App = {
     <p class="mb-4 text-sm text-gray-700">
       • When you're finished click <strong>Run</strong>.
     </p>
-
+    ㅤ__________________________________________________________________________________________________________
+    
     <p class="mb-4 text-sm text-gray-700">
       Sample data is from Tschabelia's 2020 Chamber of Deputies Election
     </p>
@@ -255,19 +256,19 @@ const App = {
       <!-- Parameters Panel -->
       <div class="p-3 border rounded">
         <h2 class="font-semibold mb-2">Parameters</h2>
-        <label class="block text-sm">Deliberative seats
+        <label class="block text-sm">1. Deliberative seats
           <input v-model.number="params.S" type="number" min="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤAnnex cap (%)
+        <label class="block text-sm mt-2">ㅤ2. Annex cap (%)
           <input v-model.number="params.alpha" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤAnnex threshold (%)
+        <label class="block text-sm mt-2">ㅤ3. Annex threshold (%)
           <input v-model.number="params.t_annex" type="number" step="0.001" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤSmall-party cutoff (%)
+        <label class="block text-sm mt-2">ㅤ4. Small-party cutoff (%)
           <input v-model.number="params.small_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤSmall party boost (%)
+        <label class="block text-sm mt-2">ㅤ5. Small party boost (%)
           <input v-model.number="params.b" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
       </div>
