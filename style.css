@@ -1,14 +1,7 @@
-table[data-v-7ba5bd90] { width: 100%; border-collapse: collapse;
-}
-th[data-v-7ba5bd90], td[data-v-7ba5bd90] { padding: 8px; border: 1px solid #ddd;
-}
-th[data-v-7ba5bd90] { background-color: #f4f4f4;
-}
-tr[data-v-7ba5bd90]:hover { background-color: #f9f9f9;
-}
-input[data-v-7ba5bd90], select[data-v-7ba5bd90], button[data-v-7ba5bd90] { padding: 4px;
-}
-button[data-v-7ba5bd90] { cursor: pointer;
-}
-button[data-v-7ba5bd90]:disabled { cursor: not-allowed;
-}
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px; border: 1px solid #ddd; }
+th { background-color: #f4f4f4; }
+tr:hover { background-color: #f9f9f9; }
+input, select, button { padding: 4px; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
