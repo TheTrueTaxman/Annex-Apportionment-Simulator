@@ -171,7 +171,8 @@ const App = {
     }
   },
 
-  template: <div class="p-4 max-w-5xl mx-auto font-sans">
+  template: `
+  <div class="p-4 max-w-5xl mx-auto font-sans">
     ㅤ__________________________________________________________________________________________________________
     <h1 class="text-2xl font-bold mb-3">Annex Apportionment: Luzhek Method Simulator</h1>
     <p class="mb-4 text-sm text-gray-700">
@@ -380,6 +381,7 @@ const App = {
       </p>
     </div>
   </div>
+  `
 }
 
 createApp(App).mount('#app')
