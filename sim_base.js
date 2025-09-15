@@ -1,0 +1,376 @@
+<template>
+  <div class="p-4 max-w-5xl mx-auto font-sans">
+    ㅤ__________________________________________________________________________________________________________
+    <h1 class="text-2xl font-bold mb-3">Annex Apportionment: Luzhek Method Simulator</h1>
+    <p class="mb-4 text-sm text-gray-700">
+      <strong>Luzhek–Annex Apportionment Method</strong> — A seat apportionment simulator for non-voting seats of a legislative chamber.
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      For use in nations with a Split-Chamber System.
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      <strong>Instructions:</strong> All fields must be non-negative. (Total voter turnout is automatically calculated from party votes).
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      • In <span style="text-decoration: underline;">Parameters</span>:
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Enter the total seat count of the voting section of your chamber.
+    </p>
+    <p class="mb-4 text-sm red-text" style="color: #ff0000;">
+      <strong>WARNING: DO NOT edit code whilst using simulator if you do not wish to lose your custom inputs. Editing will reset it back to sample data.</strong>
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      Sample data is from Tschabelia's 2020 Chamber of Deputies Election | <strong><a href="https://www.nationstates.net/nation=tschabelia" target="_blank" class="text-blue-600 hover:underline">Tschabelia on NationStates.net</a></strong>.
+    </p>
+
+    <!-- Error Message -->
+    <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded">
+      {{ errorMessage }}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <!-- Parameters Panel -->
+      <div class="p-3 border rounded">
+        <h2 class="font-semibold mb-2">Parameters</h2>
+        <label class="block text-sm">Deliberative seats (S)
+          <input v-model.number="params.S" type="number" min="1" class="w-full mt-1 p-1 border rounded" />
+        </label>
+        <label class="block text-sm mt-2">Annex cap (%)
+          <input v-model.number="params.alpha" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
+        </label>
+        <label class="block text-sm mt-2">Annex threshold (%)
+          <input v-model.number="params.t_annex" type="number" step="0.001" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
+        </label>
+        <label class="block text-sm mt-2">Small-party cutoff (%)
+          <input v-model.number="params.small_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
+        </label>
+        <label class="block text-sm mt-2">Small party boost (%)
+          <input v-model.number="params.b" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
+        </label>
+      </div>
+
+      <!-- Global Settings Panel -->
+      <div class="p-3 border rounded">
+        <h2 class="font-semibold mb-2">Global</h2>
+        <label class="block text-sm">Total voter turnout (auto-calculated from table)
+          <input :value="totalVotes" type="number" readonly class="w-full mt-1 p-1 border rounded bg-gray-100" />
+        </label>
+        <label class="block text-sm mt-2">Rounding mode
+          <select v-model="global.roundMode" class="w-full mt-1 p-1 border rounded">
+            <option value="nearest">Nearest (.5 to even)</option>
+            <option value="ceil">Ceil</option>
+            <option value="floor">Floor</option>
+          </select>
+        </label>
+
+        <div class="mt-4">
+          <button @click="runSimulation" class="px-3 py-2 bg-blue-600 text-white rounded disabled:bg-gray-400" :disabled="!isValidInput">Run</button>
+          ㅤ
+          <button @click="resetSample" class="ml-2 px-3 py-2 border rounded">Reset to sample data</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parties Table -->
+    <div class="mb-4">
+      <h2 class="font-semibold mb-2">Parties (editable)</h2>
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="text-left border-b">
+            <th>Name</th>
+            <th>Votes (or est share)</th>
+            <th>District seats d_i</th>
+            <th>Eligible for Annex</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(p, idx) in parties" :key="p.code" class="border-b">
+            <td class="py-2">
+              <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
+            </td>
+            <td>
+              <input v-model.number="p.votes" type="number" min="0" class="p-1 border rounded w-full" />
+            </td>
+            <td>
+              <input v-model.number="p.d" type="number" min="0" class="p-1 border rounded w-full" />
+            </td>
+            <td>
+              <input type="checkbox" v-model="p.inAnnex" />
+            </td>
+            <td class="text-right">
+              <button @click="removeParty(idx)" class="text-red-600">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-2">
+        <button @click="addParty" class="px-2 py-1 border rounded">Add party</button>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div v-if="resultReady">
+      <h2 class="text-lg font-semibold mb-2">Results</h2>
+      <div class="overflow-auto border rounded p-2">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="text-left border-b">
+              <th>Party</th>
+              <th>Votes</th>
+              <th>%</th>
+              <th>Seats</th>
+              <th>Entitlement</th>
+              <th>baseline</th>
+              <th>boost</th>
+              <th>aug</th>
+              <th>Annex Seats</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in resultTable" :key="row.code" class="border-b hover:bg-gray-50">
+              <td>{{ row.name }}</td>
+              <td>{{ formatInt(row.v) }}</td>
+              <td>{{ (row.p * 100).toFixed(2) }}%</td>
+              <td>{{ row.d }}</td>
+              <td>{{ row.e }}</td>
+              <td>{{ row.baseline }}</td>
+              <td>{{ row.boost.toFixed(3) }}</td>
+              <td>{{ row.aug.toFixed(3) }}</td>
+              <td>{{ row.a }}</td>
+              <td>{{ row.total }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mb-4 text-sm text-gray-700">
+        ㅤㅤㅤ
+      </p>
+      <p class="mb-4 text-sm text-gray-700">
+        <strong>Seats</strong> = Voting seats/MPs 
+      </p>
+      <p class="mb-4 text-sm text-gray-700">
+        <strong>Annex Seats</strong> = Non-Voting seats/MPs in annex
+      </p>
+      <p class="mb-4 text-sm text-gray-700">
+        ㅤㅤㅤ
+      </p>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { reactive, ref, computed } from 'vue'
+
+const params = reactive({
+  S: 663,
+  alpha: 0.15,
+  t_delib: 0.025,
+  t_annex: 0.01,
+  small_cutoff: 0.10,
+  b: 0.15
+})
+
+const global = reactive({ roundMode: 'nearest' })
+
+const parties = reactive([
+  { code: 'RPNR', name: 'RPNR', votes: 3217496, d: 130, inAnnex: true },
+  { code: 'PSD+', name: 'PSD+', votes: 2190223, d: 118, inAnnex: true },
+  { code: 'PRN', name: 'PRN', votes: 1279246, d: 24, inAnnex: true },
+  { code: 'PS', name: 'PS', votes: 1162950, d: 58, inAnnex: true },
+  { code: 'ADLR', name: 'ADLR', votes: 1027273, d: 98, inAnnex: true },
+  { code: 'NTEA', name: 'NTEA', votes: 775300, d: 31, inAnnex: true },
+  { code: 'NDC', name: 'NDC', votes: 775300, d: 86, inAnnex: true },
+  { code: 'LTI', name: 'LTI', votes: 639623, d: 58, inAnnex: true },
+  { code: 'PEV', name: 'PÉV', votes: 503945, d: 21, inAnnex: true },
+  { code: 'PPI', name: 'PPI', votes: 387650, d: 18, inAnnex: true },
+  { code: 'FFT', name: 'FFT', votes: 251973, d: 12, inAnnex: true },
+  { code: 'NONS', name: 'Non-inscrits', votes: 639623, d: 9, inAnnex: false },
+  { code: 'OTHER', name: 'Other', votes: 57388, d: 0, inAnnex: false }
+])
+
+const resultReady = ref(false)
+const resultTable = ref([])
+const errorMessage = ref('')
+
+// Compute total votes from all parties
+const totalVotes = computed(() => {
+  return parties.reduce((sum, p) => sum + (Number.isFinite(p.votes) ? p.votes : 0), 0)
+})
+
+// Input Validation
+const isValidInput = computed(() => {
+  if (!Number.isFinite(params.S) || params.S < 1) return false
+  if (!Number.isFinite(params.alpha) || params.alpha < 0 || params.alpha > 1) return false
+  if (!Number.isFinite(params.t_annex) || params.t_annex < 0 || params.t_annex > 1) return false
+  if (!Number.isFinite(params.small_cutoff) || params.small_cutoff < 0 || params.small_cutoff > 1) return false
+  if (!Number.isFinite(params.b) || params.b < 0 || params.b > 1) return false
+  if (totalVotes.value < 1) return false
+  if (parties.length === 0) return false
+  if (parties.some(p => !p.name || p.votes < 0 || p.d < 0 || !Number.isFinite(p.votes) || !Number.isFinite(p.d))) return false
+  const totalDistrictSeats = parties.reduce((sum, p) => sum + p.d, 0)
+  if (totalDistrictSeats > params.S) return false
+  return true
+})
+
+function formatInt(n) {
+  return Number.isFinite(n) ? n.toLocaleString() : '0'
+}
+
+function addParty() {
+  parties.push({
+    code: `NEW${parties.length + 1}`,
+    name: 'NEW',
+    votes: 100000,
+    d: 0,
+    inAnnex: true
+  })
+}
+
+function removeParty(i) {
+  parties.splice(i, 1)
+}
+
+function resetSample() {
+  window.location.reload()
+}
+
+function hareEntitlement(votesArr, S) {
+  const V = votesArr.reduce((a, b) => a + b, 0)
+  if (V <= 0) throw new Error('Total votes must be positive')
+  const Q = V / S
+  const q = votesArr.map(v => Math.floor(v / Q))
+  const remainders = votesArr.map((v, i) => (v / Q) - q[i])
+  let R = S - q.reduce((a, b) => a + b, 0)
+  const idxs = remainders.map((r, i) => ({ r, i })).sort((a, b) => b.r - a.r || votesArr[b.i] - votesArr[a.i])
+  for (let k = 0; k < R && k < idxs.length; k++) {
+    q[idxs[k].i] += 1
+  }
+  return q
+}
+
+function computeWeights(p) {
+  if (p <= 0 || p >= 1) return 0
+  return 1 / (p * (1 - p))
+}
+
+function roundVal(x, mode = 'nearest') {
+  if (!Number.isFinite(x)) return 0
+  if (mode === 'nearest') return Math.round(x)
+  if (mode === 'ceil') return Math.ceil(x)
+  return Math.floor(x)
+}
+
+function runSimulation() {
+  errorMessage.value = ''
+  resultReady.value = false
+  try {
+    // Validate inputs
+    if (!isValidInput.value) {
+      throw new Error('Invalid inputs: Ensure all values are valid, non-negative, and district seats do not exceed total seats.')
+    }
+
+    // Prepare arrays
+    const S = params.S
+    const C = Math.floor(params.alpha * S)
+    const partiesCopy = parties.map(p => ({ ...p }))
+    const V = totalVotes.value
+    if (V <= 0) throw new Error('Total votes must be positive')
+    partiesCopy.forEach(p => p.p = p.votes / V)
+
+    // Compute entitlement via Hare
+    const votesArr = partiesCopy.map(p => p.votes)
+    const entArr = hareEntitlement(votesArr, S)
+    partiesCopy.forEach((p, i) => p.e = entArr[i])
+
+    // Baseline deficits
+    partiesCopy.forEach(p => p.baseline = Math.max(0, p.e - p.d))
+
+    // Eligible for annex
+    partiesCopy.forEach(p => p.eligible = (p.p >= params.t_annex) && p.inAnnex)
+
+    // Small parties set
+    const smallSet = partiesCopy.filter(p => p.eligible && p.p < params.small_cutoff)
+    const B_raw = smallSet.reduce((a, p) => a + (params.b * p.e), 0)
+
+    // Inverse-variance weights
+    const weights = smallSet.map(p => computeWeights(p.p))
+    const wSum = weights.reduce((a, b) => a + b, 0) || 1
+    const boosts = smallSet.map((p, i) => wSum > 0 ? B_raw * (weights[i] / wSum) : 0)
+
+    // Attach boosts
+    smallSet.forEach((p, i) => p.boost = boosts[i])
+    partiesCopy.forEach(p => { if (!p.boost) p.boost = 0 })
+
+    // Augmented deficits
+    partiesCopy.forEach(p => p.aug = p.baseline + p.boost)
+    partiesCopy.forEach(p => p.augRounded = roundVal(p.aug, global.roundMode))
+
+    // Small-first allocation
+    const smallDemands = partiesCopy
+      .filter(p => p.eligible && p.p < params.small_cutoff)
+      .map(p => ({ code: p.code, demand: p.augRounded, name: p.name, votes: p.votes }))
+    const smallTotalDemand = smallDemands.reduce((a, b) => a + b.demand, 0)
+    const allocation = partiesCopy.reduce((acc, p) => { acc[p.code] = 0; return acc }, {})
+
+    if (smallTotalDemand >= C) {
+      const base = smallDemands.map(s => ({ ...s, fraction: (s.demand / smallTotalDemand) * C }))
+      base.forEach(b => b.floor = Math.floor(b.fraction))
+      let used = base.reduce((a, b) => a + b.floor, 0)
+      let rem = C - used
+      base.forEach(b => b.remainder = b.fraction - b.floor)
+      base.sort((a, b) => b.remainder - a.remainder || b.votes - a.votes)
+      for (let i = 0; i < rem && i < base.length; i++) { base[i].floor += 1 }
+      base.forEach(b => allocation[b.code] = b.floor)
+    } else {
+      smallDemands.forEach(s => allocation[s.code] = s.demand)
+      let remaining = C - smallTotalDemand
+      const largeList = partiesCopy
+        .filter(p => p.eligible && !(p.p < params.small_cutoff) && p.augRounded > 0)
+        .map(p => ({ code: p.code, demand: p.augRounded, votes: p.votes }))
+      const totalLargeDemand = largeList.reduce((a, b) => a + b.demand, 0)
+      if (totalLargeDemand > 0) {
+        const frac = largeList.map(l => ({ ...l, fraction: (l.demand / totalLargeDemand) * remaining }))
+        frac.forEach(f => f.floor = Math.floor(f.fraction))
+        let used = frac.reduce((a, b) => a + b.floor, 0)
+        let rem = remaining - used
+        frac.forEach(f => f.remainder = f.fraction - f.floor)
+        frac.sort((a, b) => b.remainder - a.remainder || b.votes - a.votes)
+        for (let i = 0; i < rem && i < frac.length; i++) { frac[i].floor += 1 }
+        frac.forEach(f => allocation[f.code] = f.floor)
+      }
+    }
+
+    // Prepare result table
+    resultTable.value = partiesCopy.map(p => ({
+      code: p.code,
+      name: p.name,
+      v: p.votes,
+      p: p.p,
+      d: p.d,
+      e: p.e,
+      baseline: p.baseline,
+      boost: p.boost || 0,
+      aug: p.aug || 0,
+      a: allocation[p.code] || 0,
+      total: p.d + (allocation[p.code] || 0)
+    }))
+    resultReady.value = true
+  } catch (err) {
+    errorMessage.value = err.message || 'An error occurred during the simulation.'
+  }
+}
+</script>
+
+<style scoped>
+/* Minimal styling for playground compatibility */
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px; border: 1px solid #ddd; }
+th { background-color: #f4f4f4; }
+tr:hover { background-color: #f9f9f9; }
+input, select, button { padding: 4px; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+</style>
