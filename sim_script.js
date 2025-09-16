@@ -1,6 +1,9 @@
 const { createApp, reactive, ref, computed } = Vue
 
 const App = {
+components : {
+  draggable: vuedraggable,
+},
   setup() {
     const params = reactive({
       S: 663,
