@@ -329,8 +329,7 @@ const App = {
       <table class="w-full text-sm border-collapse">
         <thead>
           <tr class="text-left border-b">
-            <th></th> <!-- drag handle column heading -->
-            <th></th> 
+            <th></th>
             <th>Name</th>
             <th>Votes (raw)</th>
             <th>Deliberative Seats</th>
@@ -340,7 +339,7 @@ const App = {
         </thead>
         <tbody id="party-tbody">
           <tr v-for="(p, idx) in parties" :key="p.code" class="border-b">
-            <td class="text-center drag-handle" style="width:34px; cursor:move;">☰</td>
+            <td class="text-center drag-handle" style="width:34px;">⋮⋮</td>
             <td class="py-2">
               <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
             </td>
