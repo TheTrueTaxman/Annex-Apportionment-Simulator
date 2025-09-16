@@ -343,16 +343,16 @@ const App = {
            <tr class="border-b">
             <td class="text-center drag-handle" style="cursor:grab;">⋮⋮</td>
             <td class="py-2">
-              <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
+              <input v-model="element.name" class="p-1 border rounded w-full" placeholder="Party name" />
             </td>
             <td>
-              <input v-model.number="p.votes" type="number" min="0" class="p-1 border rounded w-full" />
+              <input v-model.number="element.votes" type="number" min="0" class="p-1 border rounded w-full" />
             </td>
             <td>
-              <input v-model.number="p.d" type="number" min="0" class="p-1 border rounded w-full" />
+              <input v-model.number="element.d" type="number" min="0" class="p-1 border rounded w-full" />
             </td>
             <td>
-              <input type="checkbox" v-model="p.inAnnex" />
+              <input type="checkbox" v-model="element.inAnnex" />
             </td>
             <td class="text-right">
               <button @click="removeParty(idx)" class="text-red-600">Remove</button>
