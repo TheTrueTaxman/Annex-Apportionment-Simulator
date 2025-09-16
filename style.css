@@ -5,5 +5,5 @@ tr:hover { background-color: #f9f9f9; }
 input, select, button { padding: 4px; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
-.drag-handle { cursor: grab; user-select: none; padding: 0 4px; }
+.drag-handle { cursor: grab; user-select: none; padding: 4px; }
 .drag-handle:active { cursor: grabbing; }
