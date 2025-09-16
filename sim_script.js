@@ -311,7 +311,7 @@ components : {
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody is="draggable" v-model="parties" item-key="code" tag="tbody">
           <tr v-for="(p, idx) in parties" :key="p.code" class="border-b">
             <td class="py-2">
               <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
