@@ -375,13 +375,11 @@ const App = {
               <th>Votes</th>
               <th>%</th>
               <th>Seats</th>
-              <th>Seats*</th>
               <th>Entitlement</th>
-              <th> Baseline Difference</th>
+              <th>Baseline Difference</th>
               <th>Boost</th>
               <th>Augment.</th>
               <th>Annex Seats</th>
-              <th>Annex Seats*</th>
               <th>Total</th>
             </tr>
           </thead>
