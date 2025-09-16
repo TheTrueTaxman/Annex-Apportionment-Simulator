@@ -339,7 +339,7 @@ const App = {
         </thead>
         
         <draggable v-model="parties" item-key="code" handle=".drag-handle" tag="tbody">
-          <template #item="{ element: p, index: idx }">
+          <template #item="{ element, index }">
            <tr class="border-b">
             <td class="text-center drag-handle" style="cursor:grab;">⋮⋮</td>
             <td class="py-2">
