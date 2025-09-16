@@ -373,12 +373,12 @@ const App = {
               <th>Party</th>
               <th>Votes</th>
               <th>%</th>
-              <th>Seats</th>
+              <th>Seats*</th>
               <th>Entitlement</th>
               <th>Baseline Difference</th>
               <th>Boost</th>
               <th>Augment.</th>
-              <th>Annex Seats</th>
+              <th>Annex Seats*</th>
               <th>Total</th>
             </tr>
           </thead>
@@ -402,11 +402,9 @@ const App = {
         ㅤㅤㅤ
       </p>
       <p class="mb-4 text-sm text-gray-700">
-        <strong>Seats</strong> = Voting seats/MPs 
         <strong>*Seats</strong> = Voting seats/MPs 
       </p>
       <p class="mb-4 text-sm text-gray-700">
-        <strong>Annex Seats</strong> = Non-Voting seats/MPs in annex
         <strong>*Annex Seats</strong> = Non-Voting seats/MPs in annex
       </p>
       <p class="mb-4 text-sm text-gray-700">
