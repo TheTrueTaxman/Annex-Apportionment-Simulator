@@ -329,7 +329,7 @@ const App = {
       <table class="w-full text-sm border-collapse">
         <thead>
           <tr class="text-left border-b">
-            <th></th> 
+            <th style="width:34px;"></th>
             <th>Name</th>
             <th>Votes (raw)</th>
             <th>Deliberative Seats</th>
@@ -337,8 +337,8 @@ const App = {
             <th></th>
           </tr>
         </thead>
-        
-        <draggable v-model="parties" item-key="code" tag="tbody">
+      
+        <draggable v-model="parties" item-key="code" handle=".drag-handle" tag="tbody">
           <tr v-for="(p, idx) in parties" :key="p.code" class="border-b">
             <td class="text-center drag-handle" style="cursor:grab;">⋮⋮</td>
             <td class="py-2">
