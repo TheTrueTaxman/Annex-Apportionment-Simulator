@@ -311,24 +311,28 @@ components : {
             <th></th>
           </tr>
         </thead>
-        <tbody is="draggable" v-model="parties" item-key="code" tag="tbody">
-          <tr v-for="(p, idx) in parties" :key="p.code" class="border-b">
-            <td class="py-2">
-              <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
-            </td>
-            <td>
-              <input v-model.number="p.votes" type="number" min="0" class="p-1 border rounded w-full" />
-            </td>
-            <td>
-              <input v-model.number="p.d" type="number" min="0" class="p-1 border rounded w-full" />
-            </td>
-            <td>
-              <input type="checkbox" v-model="p.inAnnex" />
-            </td>
-            <td class="text-right">
-              <button @click="removeParty(idx)" class="text-red-600">Remove</button>
-            </td>
-          </tr>
+        <tbody>
+          <draggable v-model="parties" item-key="code" tag="tbody">
+            <template #item="{ element: p, index: idx }">
+              <tr class="border-b">
+                <td class="py-2">
+                  <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
+                </td>
+                <td>
+                  <input v-model.number="p.votes" type="number" min="0" class="p-1 border rounded w-full" />
+                </td>
+                <td>
+                  <input v-model.number="p.d" type="number" min="0" class="p-1 border rounded w-full" />
+                </td>
+                <td>
+                  <input type="checkbox" v-model="p.inAnnex" />
+                </td>
+                <td class="text-right">
+                  <button @click="removeParty(idx)" class="text-red-600">Remove</button>
+                </td>
+              </tr>
+            </template>
+          </draggable>
         </tbody>
       </table>
       <div class="mt-2">
