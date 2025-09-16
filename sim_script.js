@@ -338,9 +338,10 @@ const App = {
           </tr>
         </thead>
         
-        <tbody id="party-tbody">
-          <tr v-for="(p, idx) in parties" :key="p.code" class="border-b">
-            <td class="text-center drag-handle" style="width:34px; cursor:move;">⋮⋮</td>
+        <draggable v-model="parties" item-key="code" handle=".drag-handle" tag="tbody">
+          <template #item="{ element: p, index: idx }">
+           <tr class="border-b">
+            <td class="text-center drag-handle" style="cursor:grab;">⋮⋮</td>
             <td class="py-2">
               <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
             </td>
@@ -356,8 +357,9 @@ const App = {
             <td class="text-right">
               <button @click="removeParty(idx)" class="text-red-600">Remove</button>
             </td>
-          </tr>
-        </tbody>
+           </tr>
+          </template>
+        </draggable>
       </table>
       <div class="mt-2">
         <button @click="addParty" class="px-2 py-1 border rounded">Add party</button>
