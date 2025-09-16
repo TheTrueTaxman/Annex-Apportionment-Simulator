@@ -206,7 +206,7 @@ const App = {
       ㅤ◦ 4. Enter the vote share [percentage] threshold, above which parties are no longer considered "small" and not eligible for a "boost".
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ 5. Enter the amount by which you wish to boost small parties by. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
+      ㅤ◦ 5. Enter the amount by which you wish to boost small parties. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
     </p>
 
 
@@ -218,7 +218,7 @@ const App = {
       ㅤ◦ The total voter turnout box offers no output. It's just a display.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ Choose your preferred rounding mode when caluclating Annex seat amounts. (e.g Nearest rounds from .5, Ceil rounds up no matter the decimal, Floor rounds down no matter the decimal)
+      ㅤ◦ Choose your preferred rounding mode when calculating Annex seat amounts. (e.g Nearest rounds from .5, Ceil rounds up no matter the decimal, Floor rounds down no matter the decimal)
     </p>
 
 
