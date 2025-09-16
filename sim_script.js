@@ -1,9 +1,6 @@
-const { createApp, reactive, ref, computed } = Vue
+const { createApp, reactive, ref, computed, onMounted } = Vue
 
 const App = {
-components : {
-  draggable: vuedraggable,
-},
   setup() {
     const params = reactive({
       S: 663,
@@ -167,6 +164,31 @@ components : {
       }
     }
 
+    onMounted(() => {
+      if (typeof Sortable === 'undefined') {
+        console.warn('Sortable not found — make sure you included Sortable.min.js before script.js')
+        return
+      }
+
+      const tbody = document.getElementById('party-tbody')
+      if (!tbody) {
+        console.warn('party-tbody not found in DOM yet.')
+        return
+      }
+
+      Sortable.create(tbody, {
+        animation: 150,
+        handle: '.drag-handle',
+        onEnd: (evt) => {
+          const oldIndex = evt.oldIndex
+          const newIndex = evt.newIndex
+          if (oldIndex === newIndex) return
+          const moved = parties.splice(oldIndex, 1)[0]
+          parties.splice(newIndex, 0, moved)
+        }
+      })
+    })
+
     return {
       params, global, parties, resultReady, resultTable, errorMessage,
       totalVotes, isValidInput,
@@ -304,6 +326,7 @@ components : {
       <table class="w-full text-sm border-collapse">
         <thead>
           <tr class="text-left border-b">
+            <th></th> <!-- drag handle column heading -->
             <th>Name</th>
             <th>Votes (raw)</th>
             <th>Deliberative Seats</th>
@@ -311,28 +334,25 @@ components : {
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          <draggable v-model="parties" item-key="code" tag="tbody">
-            <template #item="{ element: p, index: idx }">
-              <tr class="border-b">
-                <td class="py-2">
-                  <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
-                </td>
-                <td>
-                  <input v-model.number="p.votes" type="number" min="0" class="p-1 border rounded w-full" />
-                </td>
-                <td>
-                  <input v-model.number="p.d" type="number" min="0" class="p-1 border rounded w-full" />
-                </td>
-                <td>
-                  <input type="checkbox" v-model="p.inAnnex" />
-                </td>
-                <td class="text-right">
-                  <button @click="removeParty(idx)" class="text-red-600">Remove</button>
-                </td>
-              </tr>
-            </template>
-          </draggable>
+        <tbody id="party-tbody">
+          <tr v-for="(p, idx) in parties" :key="p.code" class="border-b">
+            <td class="text-center drag-handle" style="width:34px; cursor:move;">☰</td>
+            <td class="py-2">
+              <input v-model="p.name" class="p-1 border rounded w-full" placeholder="Party name" />
+            </td>
+            <td>
+              <input v-model.number="p.votes" type="number" min="0" class="p-1 border rounded w-full" />
+            </td>
+            <td>
+              <input v-model.number="p.d" type="number" min="0" class="p-1 border rounded w-full" />
+            </td>
+            <td>
+              <input type="checkbox" v-model="p.inAnnex" />
+            </td>
+            <td class="text-right">
+              <button @click="removeParty(idx)" class="text-red-600">Remove</button>
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="mt-2">
