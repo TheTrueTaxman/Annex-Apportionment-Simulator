@@ -260,6 +260,9 @@ const App = {
     <p class="mb-4 text-sm text-gray-700">
       ㅤ◦ Check/Uncheck boxes to decide if that party gets representation in the Annex.
     </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ Drag and drop your parties to reorganize them with the handles on the left side of the table.
+    </p>
 
 
 
