@@ -5,10 +5,10 @@ const App = {
     const params = reactive({
       S: 663,
       alpha: 0.15,
-      t_delib: 0.025,
-      t_annex: 0.01,
+      t_annex_mn: 0.015,
+      t_annex_mx: 0.12,
       small_cutoff: 0.10,
-      b: 0.25
+      b: 0.15
     })
 
     const global = reactive({ roundMode: 'nearest' })
@@ -19,13 +19,13 @@ const App = {
       { code: 'ADLR', name: 'ADLR', votes: 1527273, d: 98, inAnnex: true },
       { code: 'NDC', name: 'NDC', votes: 962304, d: 86, inAnnex: true },
       { code: 'PS', name: 'PS', votes: 876295, d: 58, inAnnex: true },
-      { code: 'NTEA', name: 'NTEA', votes: 840973, d: 31, inAnnex: true },
-      { code: 'PRN', name: 'PRN', votes: 689846, d: 24, inAnnex: true },
+      { code: 'NTEA', name: 'NTEA', votes: 840973, d: 33, inAnnex: true },
+      { code: 'PRN', name: 'PRN', votes: 689846, d: 28, inAnnex: true },
       { code: 'LTI', name: 'LTI', votes: 639623, d: 58, inAnnex: true },
-      { code: 'PEV', name: 'PÉV', votes: 523945, d: 21, inAnnex: true },
-      { code: 'PPI', name: 'PPI', votes: 387650, d: 18, inAnnex: true },
-      { code: 'FFT', name: 'FFT', votes: 251973, d: 12, inAnnex: true },
-      { code: 'NONS', name: 'Non-inscrits', votes: 154623, d: 9, inAnnex: false },
+      { code: 'PEV', name: 'PÉV', votes: 603945, d: 21, inAnnex: true },
+      { code: 'PPI', name: 'PPI', votes: 397650, d: 18, inAnnex: true },
+      { code: 'FFT', name: 'FFT', votes: 171973, d: 5, inAnnex: true },
+      { code: 'NONS', name: 'Non-inscrits', votes: 154623, d: 10, inAnnex: false },
       { code: 'OTHER', name: 'Other', votes: 49388, d: 0, inAnnex: false }
     ])
 
@@ -40,7 +40,7 @@ const App = {
     const isValidInput = computed(() => {
       if (!Number.isFinite(params.S) || params.S < 1) return false
       if (!Number.isFinite(params.alpha) || params.alpha < 0 || params.alpha > 1) return false
-      if (!Number.isFinite(params.t_annex) || params.t_annex < 0 || params.t_annex > 1) return false
+      if (!Number.isFinite(params.t_annex_mn) || params.t_annex_mn < 0 || params.t_annex_mn_min > 1) return false
       if (!Number.isFinite(params.small_cutoff) || params.small_cutoff < 0 || params.small_cutoff > 1) return false
       if (!Number.isFinite(params.b) || params.b < 0 || params.b > 1) return false
       if (totalVotes.value < 1) return false
@@ -97,7 +97,7 @@ const App = {
         partiesCopy.forEach((p, i) => p.e = entArr[i])
 
         partiesCopy.forEach(p => p.baseline = Math.max(0, p.e - p.d))
-        partiesCopy.forEach(p => p.eligible = (p.p >= params.t_annex) && p.inAnnex)
+        partiesCopy.forEach(p => p.eligible = (p.p >= params.t_annex && p.p <= params.max_cutoff && p.inAnnex))
 
         const smallSet = partiesCopy.filter(p => p.eligible && p.p < params.small_cutoff)
         const B_raw = smallSet.reduce((a, p) => a + (params.b * p.e), 0)
@@ -290,8 +290,11 @@ const App = {
         <label class="block text-sm mt-2">ㅤ2. Annex cap (%)
           <input v-model.number="params.alpha" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤ3. Annex threshold (%)
-          <input v-model.number="params.t_annex" type="number" step="0.001" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
+        <label class="block text-sm mt-2">ㅤ3. Annex threshold min. (%)
+          <input v-model.number="params.t_annex_mn" type="number" step="0.001" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
+        </label>
+        <label class="block text-sm mt-2">ㅤ6. Annex threshold max. (%)
+          <input v-model.number="params.max_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
         <label class="block text-sm mt-2">ㅤ4. Small-party cutoff (%)
           <input v-model.number="params.small_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
