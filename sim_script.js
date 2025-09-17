@@ -97,7 +97,7 @@ const App = {
         partiesCopy.forEach((p, i) => p.e = entArr[i])
 
         partiesCopy.forEach(p => p.baseline = Math.max(0, p.e - p.d))
-        partiesCopy.forEach(p => p.eligible = (p.p >= params.t_annex && p.p <= params.max_cutoff && p.inAnnex))
+        partiesCopy.forEach(p => p.eligible = (p.p >= params.t_annex_mn && p.p <= params.t_annex_mx && p.inAnnex))
 
         const smallSet = partiesCopy.filter(p => p.eligible && p.p < params.small_cutoff)
         const B_raw = smallSet.reduce((a, p) => a + (params.b * p.e), 0)
@@ -294,7 +294,7 @@ const App = {
           <input v-model.number="params.t_annex_mn" type="number" step="0.001" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
         <label class="block text-sm mt-2">ㅤ6. Annex threshold max. (%)
-          <input v-model.number="params.max_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
+          <input v-model.number="params.t_annex_mx" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
         <label class="block text-sm mt-2">ㅤ4. Small-party cutoff (%)
           <input v-model.number="params.small_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
