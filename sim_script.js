@@ -225,13 +225,16 @@ const App = {
       ㅤ◦ 2. Enter a percentage to set the maximum number of seats in the annex by using total Deliberative seats as a base to multiply by. Fractions will always be <span style="text-decoration: underline;">rounded down</span>.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ 3. Enter the <span style="text-decoration: underline;">minimum</span> vote share allowed for eligibilty in the Annex.
+      ㅤ◦ 3. Enter the <span style="text-decoration: underline;">minimum</span> vote share percentage allowed for eligibilty in the Annex.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ 4. Enter the vote share [percentage] threshold, above which parties are no longer considered "small" and not eligible for a "boost".
+      ㅤ◦ 4. Enter the <span style="text-decoration: underline;">maximum</span> vote share percentage allowed for eligibilty in the Annex.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ 5. Enter the amount by which you wish to boost small parties. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
+      ㅤ◦ 5. Enter the vote share [percentage] threshold, above which parties are no longer considered "small" and not eligible for a "boost".
+    </p>
+    <p class="mb-4 text-sm text-gray-700">
+      ㅤ◦ 6. Enter the amount by which you wish to boost small parties. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
     </p>
 
 
@@ -293,13 +296,13 @@ const App = {
         <label class="block text-sm mt-2">ㅤ3. Annex threshold min. (%)
           <input v-model.number="params.t_annex_mn" type="number" step="0.001" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤ6. Annex threshold max. (%)
+        <label class="block text-sm mt-2">ㅤ4. Annex threshold max. (%)
           <input v-model.number="params.t_annex_mx" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤ4. Small-party cutoff (%)
+        <label class="block text-sm mt-2">ㅤ5. Small-party cutoff (%)
           <input v-model.number="params.small_cutoff" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
-        <label class="block text-sm mt-2">ㅤ5. Small party boost (%)
+        <label class="block text-sm mt-2">ㅤ6. Small party boost (%)
           <input v-model.number="params.b" type="number" step="0.01" min="0" max="1" class="w-full mt-1 p-1 border rounded" />
         </label>
       </div>
