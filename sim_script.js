@@ -231,7 +231,7 @@ const App = {
       ㅤ◦ 4. Enter the <span style="text-decoration: underline;">maximum</span> vote share percentage allowed for eligibilty in the Annex.
     </p>
     <p class="mb-4 text-sm text-gray-700">
-      ㅤ◦ 5. Enter the vote share [percentage] threshold, above which parties are no longer considered "small" and not eligible for a "boost".
+      ㅤ◦ 5. Enter the vote share percentage above which parties are no longer considered "small" and not eligible for a "boost". (Like a soft cap, in comparison to 4.'s hard cap)
     </p>
     <p class="mb-4 text-sm text-gray-700">
       ㅤ◦ 6. Enter the amount by which you wish to boost small parties. (Keep in mind that the program still needs to apportion on a small first basis; this parameter wont always be reflected to its full potential)
