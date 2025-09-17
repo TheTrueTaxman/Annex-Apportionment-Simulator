@@ -375,7 +375,7 @@ const App = {
               <th>%</th>
               <th>Seats*</th>
               <th>Entitlement</th>
-              <th>Baseline Difference</th>
+              <th>Baseline Deficit</th>
               <th>Boost</th>
               <th>Augment.</th>
               <th>Annex Seats*</th>
