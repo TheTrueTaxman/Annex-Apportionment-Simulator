@@ -8,25 +8,25 @@ const App = {
       t_delib: 0.025,
       t_annex: 0.01,
       small_cutoff: 0.10,
-      b: 0.15
+      b: 0.26
     })
 
     const global = reactive({ roundMode: 'nearest' })
 
     const parties = reactive([
       { code: 'RPNR', name: 'RPNR', votes: 3217496, d: 130, inAnnex: true },
-      { code: 'PSD+', name: 'PSD+', votes: 2190223, d: 118, inAnnex: true },
-      { code: 'PRN', name: 'PRN', votes: 1279246, d: 24, inAnnex: true },
-      { code: 'PS', name: 'PS', votes: 1162950, d: 58, inAnnex: true },
-      { code: 'ADLR', name: 'ADLR', votes: 1027273, d: 98, inAnnex: true },
-      { code: 'NTEA', name: 'NTEA', votes: 775300, d: 31, inAnnex: true },
-      { code: 'NDC', name: 'NDC', votes: 775300, d: 86, inAnnex: true },
+      { code: 'PSD+', name: 'PSD+', votes: 2490223, d: 118, inAnnex: true },
+      { code: 'ADLR', name: 'ADLR', votes: 1527273, d: 98, inAnnex: true },
+      { code: 'NDC', name: 'NDC', votes: 962304, d: 86, inAnnex: true },
+      { code: 'PS', name: 'PS', votes: 876295, d: 58, inAnnex: true },
+      { code: 'NTEA', name: 'NTEA', votes: 840973, d: 31, inAnnex: true },
+      { code: 'PRN', name: 'PRN', votes: 689846, d: 24, inAnnex: true },
       { code: 'LTI', name: 'LTI', votes: 639623, d: 58, inAnnex: true },
-      { code: 'PEV', name: 'PÉV', votes: 503945, d: 21, inAnnex: true },
+      { code: 'PEV', name: 'PÉV', votes: 523945, d: 21, inAnnex: true },
       { code: 'PPI', name: 'PPI', votes: 387650, d: 18, inAnnex: true },
       { code: 'FFT', name: 'FFT', votes: 251973, d: 12, inAnnex: true },
-      { code: 'NONS', name: 'Non-inscrits', votes: 639623, d: 9, inAnnex: false },
-      { code: 'OTHER', name: 'Other', votes: 57388, d: 0, inAnnex: false }
+      { code: 'NONS', name: 'Non-inscrits', votes: 154623, d: 9, inAnnex: false },
+      { code: 'OTHER', name: 'Other', votes: 49388, d: 0, inAnnex: false }
     ])
 
     const resultReady = ref(false)
