@@ -8,7 +8,7 @@ const App = {
       t_annex_mn: 0.015,
       t_annex_mx: 0.12,
       small_cutoff: 0.10,
-      b: 0.15
+      b: 0.20
     })
 
     const global = reactive({ roundMode: 'nearest' })
